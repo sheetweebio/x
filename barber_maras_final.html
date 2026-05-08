@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erste Bank Clone</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f7f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .erste-blue { background-color: #00529b; }
+        .erste-text-blue { color: #00529b; }
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 12px;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 40;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 10px;
+            color: #64748b;
+        }
+        .nav-item.active {
+            color: #00529b;
+        }
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 400px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+        .input-group input {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .btn-save {
+            background: #00529b;
+            color: white;
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .hide-btn {
+            color: #00529b;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .quick-action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 11px;
+            text-align: center;
+            width: 25%;
+        }
+        .quick-action-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            margin-bottom: 6px;
+            border: 1px solid #eee;
+        }
+    </style>
+</head>
+<body class="pb-20">
+
+    <!-- Header -->
+    <header class="erste-blue text-white p-4 flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center gap-2 cursor-pointer" onclick="openEditModal()">
+            <span class="font-bold text-xl tracking-tighter">ERSTE <span class="font-normal">S</span></span>
+        </div>
+        <div class="flex gap-6 text-xs">
+            <div class="flex flex-col items-center">
+                <i class="fa-regular fa-envelope text-lg"></i>
+                <span>Poczta</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <i class="fa-solid fa-magnifying-glass text-lg"></i>
+                <span>Szukaj</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <i class="fa-solid fa-bars text-lg"></i>
+                <span>Menu</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="p-4">
+        <!-- Greeting -->
+        <div class="flex justify-between items-start mb-6">
+            <div>
+                <h1 class="text-xl font-semibold" id="display-name">Cześć, Łukasz Gołębiowski L...!</h1>
+            </div>
+            <button class="hide-btn">
+                <i class="fa-regular fa-eye-slash"></i>
+                <span>Ukryj</span>
+            </button>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="flex justify-between mb-8">
+            <div class="quick-action">
+                <div class="quick-action-icon">
+                    <span class="text-red-600 font-bold text-xl">b</span>
+                </div>
+                <span>BLIK</span>
+            </div>
+            <div class="quick-action">
+                <div class="quick-action-icon">
+                    <div class="flex">
+                        <div class="w-4 h-4 rounded-full bg-blue-600 -mr-1"></div>
+                        <div class="w-4 h-4 rounded-full bg-yellow-500"></div>
+                    </div>
+                </div>
+                <span>Kantor Erste</span>
+            </div>
+            <div class="quick-action">
+                <div class="quick-action-icon">
+                    <i class="fa-solid fa-sack-dollar text-purple-600 text-xl"></i>
+                </div>
+                <span>Finansowanie</span>
+            </div>
+            <div class="quick-action">
+                <div class="quick-action-icon">
+                    <i class="fa-solid fa-ellipsis text-blue-500 text-xl"></i>
+                </div>
+                <span>Wszystkie skróty</span>
+            </div>
+        </div>
+
+        <!-- Accounts Section -->
+        <div class="mb-6">
+            <div class="flex justify-between items-center mb-3">
+                <h2 class="font-bold text-lg border-l-4 border-blue-800 pl-2">Konta (2)</h2>
+                <i class="fa-solid fa-chevron-up text-gray-400"></i>
+            </div>
+
+            <!-- Business Account -->
+            <div class="card p-4 relative">
+                <div class="flex justify-between">
+                    <div>
+                        <h3 class="font-bold text-sm mb-1" id="display-biz-name">Konto Firmowe - promocja godna polecenia</h3>
+                        <p class="text-gray-500 text-xs">*4006</p>
+                    </div>
+                    <div class="erste-blue w-8 h-8 rounded-full flex items-center justify-center text-white">
+                        <i class="fa-solid fa-building-columns text-xs"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <p class="text-gray-400 text-xs">Dostępne środki</p>
+                    <p class="text-xl font-bold" id="display-biz-balance">12 450,00 PLN</p>
+                </div>
+            </div>
+
+            <!-- VAT Account -->
+            <div class="card p-4 relative">
+                <div class="flex justify-between">
+                    <div>
+                        <h3 class="font-bold text-sm mb-1">Rachunek VAT</h3>
+                        <p class="text-gray-500 text-xs">*4005</p>
+                    </div>
+                    <div class="erste-blue w-8 h-8 rounded-full flex items-center justify-center text-white">
+                        <i class="fa-solid fa-building-columns text-xs"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <p class="text-gray-400 text-xs">Dostępne środki</p>
+                    <p class="text-xl font-bold" id="display-vat-balance">2 100,50 PLN</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cards Section -->
+        <div class="mb-6">
+            <div class="flex justify-between items-center mb-3">
+                <h2 class="font-bold text-lg border-l-4 border-blue-800 pl-2">Karty (1)</h2>
+            </div>
+            <div class="card p-4 flex justify-between items-center">
+                <div>
+                    <h3 class="font-bold text-sm">VISA BUSINESS DEBIT</h3>
+                </div>
+                <div class="w-12 h-8 bg-purple-800 rounded-md"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="nav-item active">
+            <i class="fa-solid fa-house"></i>
+            <span>Pulpit</span>
+        </div>
+        <div class="nav-item">
+            <i class="fa-solid fa-basket-shopping"></i>
+            <span>Oferta</span>
+        </div>
+        <div class="nav-item">
+            <i class="fa-solid fa-right-left"></i>
+            <span>Płatności</span>
+        </div>
+        <div class="nav-item">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span>Historia</span>
+        </div>
+        <div class="nav-item">
+            <i class="fa-solid fa-ellipsis"></i>
+            <span>Więcej</span>
+        </div>
+    </nav>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-bold">Edytuj dane</h2>
+                <button onclick="closeEditModal()" class="text-gray-500"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            
+            <div class="input-group">
+                <label>Imię i Nazwisko</label>
+                <input type="text" id="input-name" value="Łukasz Gołębiowski">
+            </div>
+            
+            <div class="input-group">
+                <label>Nazwa konta firmowego</label>
+                <input type="text" id="input-biz-name" value="Konto Firmowe - promocja godna polecenia">
+            </div>
+            
+            <div class="input-group">
+                <label>Kwota na koncie firmowym (PLN)</label>
+                <input type="text" id="input-biz-balance" value="12 450,00">
+            </div>
+
+            <div class="input-group">
+                <label>Kwota na koncie VAT (PLN)</label>
+                <input type="text" id="input-vat-balance" value="2 100,50">
+            </div>
+            
+            <button class="btn-save" onclick="saveData()">Zapisz zmiany</button>
+        </div>
+    </div>
+
+    <script>
+        function openEditModal() {
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        function saveData() {
+            const name = document.getElementById('input-name').value;
+            const bizName = document.getElementById('input-biz-name').value;
+            const bizBalance = document.getElementById('input-biz-balance').value;
+            const vatBalance = document.getElementById('input-vat-balance').value;
+
+            document.getElementById('display-name').innerText = `Cześć, ${name} L...!`;
+            document.getElementById('display-biz-name').innerText = bizName;
+            document.getElementById('display-biz-balance').innerText = `${bizBalance} PLN`;
+            document.getElementById('display-vat-balance').innerText = `${vatBalance} PLN`;
+
+            closeEditModal();
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target == modal) {
+                closeEditModal();
+            }
+        }
+    </script>
+</body>
+</html>
