@@ -2,52 +2,465 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Erste Bank Clone</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Erste Bank</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f7f9;
-            color: #333;
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
-        .erste-blue { background-color: #00529b; }
-        .erste-text-blue { color: #00529b; }
-        .card {
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        body {
+            padding-bottom: 70px;
+        }
+
+        /* Splash Screen */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #003d7a 0%, #00529b 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeOut 0.6s ease-in-out 2.4s forwards;
+        }
+
+        .splash-content {
+            text-align: center;
+            animation: scaleIn 0.8s ease-out;
+        }
+
+        .splash-logo {
+            width: 120px;
+            height: auto;
+            margin-bottom: 30px;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        .splash-text {
+            color: white;
+            font-size: 18px;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 30px auto 0;
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                visibility: visible;
+            }
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #003d7a 0%, #00529b 100%);
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-logo {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.2s;
+        }
+
+        .header-logo:active {
+            opacity: 0.8;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            color: white;
+        }
+
+        .logo-s {
+            background: white;
+            color: #00529b;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 20px;
+            font-size: 18px;
+        }
+
+        .header-icons i {
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .header-icons i:active {
+            opacity: 0.7;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        /* Greeting Section */
+        .greeting-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            padding-top: 8px;
+        }
+
+        .greeting-text h1 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .greeting-text p {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .hide-button {
+            background: none;
+            border: none;
+            color: #00529b;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            transition: opacity 0.2s;
+        }
+
+        .hide-button:active {
+            opacity: 0.7;
+        }
+
+        .hide-button i {
+            font-size: 14px;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            gap: 12px;
+        }
+
+        .quick-action {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .quick-action:active {
+            transform: scale(0.95);
+        }
+
+        .quick-action-icon {
+            width: 56px;
+            height: 56px;
+            background: white;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e8eef5;
+        }
+
+        .quick-action-label {
+            font-size: 11px;
+            text-align: center;
+            color: #333;
+            font-weight: 500;
+        }
+
+        /* Accounts Section */
+        .accounts-section {
+            margin-bottom: 24px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 0 4px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: #003d7a;
+            border-radius: 2px;
+        }
+
+        .chevron {
+            color: #999;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* Account Card */
+        .account-card {
             background: white;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+            border: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+        }
+
+        .account-card:active {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .account-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
             margin-bottom: 12px;
         }
+
+        .account-info h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .account-number {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .account-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #003d7a 0%, #00529b 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .account-balance-label {
+            font-size: 11px;
+            color: #999;
+            margin-bottom: 4px;
+        }
+
+        .account-balance {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: -0.5px;
+            transition: all 0.3s;
+        }
+
+        .account-balance.hidden {
+            font-size: 24px;
+            letter-spacing: 2px;
+            color: #ccc;
+        }
+
+        /* Cards Section */
+        .cards-section {
+            margin-bottom: 24px;
+        }
+
+        .card-item {
+            background: white;
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+            border: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .card-item:active {
+            transform: scale(0.98);
+        }
+
+        .card-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .card-image {
+            width: 80px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Bottom Navigation */
         .bottom-nav {
             position: fixed;
             bottom: 0;
-            width: 100%;
+            left: 0;
+            right: 0;
             background: white;
-            border-top: 1px solid #e2e8f0;
+            border-top: 1px solid #e8eef5;
             display: flex;
             justify-content: space-around;
-            padding: 8px 0;
+            padding: 8px 0 12px 0;
             z-index: 40;
+            max-width: 480px;
+            margin: 0 auto;
         }
+
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            font-size: 10px;
-            color: #64748b;
+            gap: 4px;
+            cursor: pointer;
+            flex: 1;
+            padding: 8px 0;
+            transition: opacity 0.2s;
         }
-        .nav-item.active {
-            color: #00529b;
+
+        .nav-item:active {
+            opacity: 0.7;
         }
+
         .nav-item i {
             font-size: 20px;
-            margin-bottom: 4px;
+            color: #999;
         }
+
+        .nav-item.active i {
+            color: #00529b;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            color: #999;
+        }
+
+        .nav-item.active .nav-label {
+            color: #00529b;
+            font-weight: 600;
+        }
+
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -55,272 +468,421 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             z-index: 100;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-end;
         }
+
+        .modal.active {
+            display: flex;
+        }
+
         .modal-content {
             background: white;
-            padding: 20px;
-            border-radius: 16px;
-            width: 90%;
-            max-width: 400px;
-        }
-        .input-group {
-            margin-bottom: 15px;
-        }
-        .input-group label {
-            display: block;
-            font-size: 12px;
-            color: #64748b;
-            margin-bottom: 4px;
-        }
-        .input-group input {
             width: 100%;
-            border: 1px solid #cbd5e1;
-            padding: 8px;
-            border-radius: 8px;
-            font-size: 14px;
+            max-width: 480px;
+            height: 90%;
+            border-radius: 20px 20px 0 0;
+            padding: 24px 16px;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease-out;
         }
-        .btn-save {
-            background: #00529b;
-            color: white;
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: bold;
-            margin-top: 10px;
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
         }
-        .hide-btn {
-            color: #00529b;
-            font-size: 14px;
+
+        .modal-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 4px;
+            margin-bottom: 24px;
         }
-        .quick-action {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 11px;
-            text-align: center;
-            width: 25%;
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a1a;
         }
-        .quick-action-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: white;
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #999;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            margin-bottom: 6px;
-            border: 1px solid #eee;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #00529b;
+            box-shadow: 0 0 0 3px rgba(0, 82, 155, 0.1);
+        }
+
+        .save-button {
+            width: 100%;
+            background: linear-gradient(135deg, #003d7a 0%, #00529b 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: opacity 0.2s;
+        }
+
+        .save-button:active {
+            opacity: 0.9;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .container {
+                padding: 12px;
+            }
+
+            .greeting-text h1 {
+                font-size: 16px;
+            }
+
+            .account-balance {
+                font-size: 18px;
+            }
         }
     </style>
 </head>
-<body class="pb-20">
+<body>
+
+    <!-- Splash Screen -->
+    <div class="splash-screen">
+        <div class="splash-content">
+            <svg class="splash-logo" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+                <!-- Erste Bank Logo SVG -->
+                <text x="50" y="65" font-size="48" font-weight="900" fill="white" font-family="Arial, sans-serif">ERSTE</text>
+                <rect x="155" y="35" width="35" height="35" fill="white" rx="4"/>
+                <text x="172" y="62" font-size="20" font-weight="bold" fill="#00529b" font-family="Arial, sans-serif" text-anchor="middle">S</text>
+            </svg>
+            <p class="splash-text">BANK</p>
+            <div class="loader"></div>
+        </div>
+    </div>
 
     <!-- Header -->
-    <header class="erste-blue text-white p-4 flex justify-between items-center sticky top-0 z-50">
-        <div class="flex items-center gap-2 cursor-pointer" onclick="openEditModal()">
-            <span class="font-bold text-xl tracking-tighter">ERSTE <span class="font-normal">S</span></span>
+    <div class="header">
+        <div class="header-logo" onclick="openEditModal()">
+            <span class="logo-text">ERSTE</span>
+            <span class="logo-s">S</span>
         </div>
-        <div class="flex gap-6 text-xs">
-            <div class="flex flex-col items-center">
-                <i class="fa-regular fa-envelope text-lg"></i>
-                <span>Poczta</span>
-            </div>
-            <div class="flex flex-col items-center">
-                <i class="fa-solid fa-magnifying-glass text-lg"></i>
-                <span>Szukaj</span>
-            </div>
-            <div class="flex flex-col items-center">
-                <i class="fa-solid fa-bars text-lg"></i>
-                <span>Menu</span>
-            </div>
+        <div class="header-icons">
+            <i class="fas fa-envelope"></i>
+            <i class="fas fa-search"></i>
+            <i class="fas fa-bars"></i>
         </div>
-    </header>
+    </div>
 
     <!-- Main Content -->
-    <main class="p-4">
+    <div class="container">
         <!-- Greeting -->
-        <div class="flex justify-between items-start mb-6">
-            <div>
-                <h1 class="text-xl font-semibold" id="display-name">Cześć, Łukasz Gołębiowski L...!</h1>
+        <div class="greeting-section">
+            <div class="greeting-text">
+                <h1>Cześć, <span id="userName">Franciszek Jurga</span></h1>
+                <p>Zarządzaj swoimi finansami</p>
             </div>
-            <button class="hide-btn">
-                <i class="fa-regular fa-eye-slash"></i>
-                <span>Ukryj</span>
+            <button class="hide-button" id="hideBtn" onclick="toggleHideData()">
+                <i class="fas fa-eye"></i>
+                <span id="hideBtnText">Ukryj</span>
             </button>
         </div>
 
         <!-- Quick Actions -->
-        <div class="flex justify-between mb-8">
+        <div class="quick-actions">
             <div class="quick-action">
                 <div class="quick-action-icon">
-                    <span class="text-red-600 font-bold text-xl">b</span>
+                    <i class="fas fa-qrcode" style="color: #e74c3c;"></i>
                 </div>
-                <span>BLIK</span>
+                <div class="quick-action-label">BLIK</div>
             </div>
             <div class="quick-action">
                 <div class="quick-action-icon">
-                    <div class="flex">
-                        <div class="w-4 h-4 rounded-full bg-blue-600 -mr-1"></div>
-                        <div class="w-4 h-4 rounded-full bg-yellow-500"></div>
-                    </div>
+                    <i class="fas fa-money-bill-wave" style="color: #3498db;"></i>
                 </div>
-                <span>Kantor Erste</span>
+                <div class="quick-action-label">Kantor Erste</div>
             </div>
             <div class="quick-action">
                 <div class="quick-action-icon">
-                    <i class="fa-solid fa-sack-dollar text-purple-600 text-xl"></i>
+                    <i class="fas fa-hand-holding-usd" style="color: #9b59b6;"></i>
                 </div>
-                <span>Finansowanie</span>
+                <div class="quick-action-label">Finansowanie</div>
             </div>
             <div class="quick-action">
                 <div class="quick-action-icon">
-                    <i class="fa-solid fa-ellipsis text-blue-500 text-xl"></i>
+                    <i class="fas fa-ellipsis-h" style="color: #34495e;"></i>
                 </div>
-                <span>Wszystkie skróty</span>
+                <div class="quick-action-label">Wszystkie</div>
             </div>
         </div>
 
-        <!-- Accounts Section -->
-        <div class="mb-6">
-            <div class="flex justify-between items-center mb-3">
-                <h2 class="font-bold text-lg border-l-4 border-blue-800 pl-2">Konta (2)</h2>
-                <i class="fa-solid fa-chevron-up text-gray-400"></i>
+        <!-- Personal Account Section -->
+        <div class="accounts-section">
+            <div class="section-header">
+                <div class="section-title">Konto osobiste</div>
+                <div class="chevron"><i class="fas fa-chevron-up"></i></div>
             </div>
-
-            <!-- Business Account -->
-            <div class="card p-4 relative">
-                <div class="flex justify-between">
-                    <div>
-                        <h3 class="font-bold text-sm mb-1" id="display-biz-name">Konto Firmowe - promocja godna polecenia</h3>
-                        <p class="text-gray-500 text-xs">*4006</p>
+            <div class="account-card">
+                <div class="account-header">
+                    <div class="account-info">
+                        <h3 id="personalAccName">Konto osobiste</h3>
+                        <div class="account-number">*1234</div>
                     </div>
-                    <div class="erste-blue w-8 h-8 rounded-full flex items-center justify-center text-white">
-                        <i class="fa-solid fa-building-columns text-xs"></i>
+                    <div class="account-icon">
+                        <i class="fas fa-user"></i>
                     </div>
                 </div>
-                <div class="mt-4">
-                    <p class="text-gray-400 text-xs">Dostępne środki</p>
-                    <p class="text-xl font-bold" id="display-biz-balance">12 450,00 PLN</p>
-                </div>
+                <div class="account-balance-label">Dostępne środki</div>
+                <div class="account-balance" id="personalBalance">8 750,50 PLN</div>
             </div>
+        </div>
 
-            <!-- VAT Account -->
-            <div class="card p-4 relative">
-                <div class="flex justify-between">
-                    <div>
-                        <h3 class="font-bold text-sm mb-1">Rachunek VAT</h3>
-                        <p class="text-gray-500 text-xs">*4005</p>
+        <!-- Business Accounts Section -->
+        <div class="accounts-section">
+            <div class="section-header">
+                <div class="section-title">Konta firmowe (2)</div>
+                <div class="chevron"><i class="fas fa-chevron-up"></i></div>
+            </div>
+            <div class="account-card">
+                <div class="account-header">
+                    <div class="account-info">
+                        <h3 id="businessAccName">Konto Firmowe - promocja godna polecenia</h3>
+                        <div class="account-number">*4006</div>
                     </div>
-                    <div class="erste-blue w-8 h-8 rounded-full flex items-center justify-center text-white">
-                        <i class="fa-solid fa-building-columns text-xs"></i>
+                    <div class="account-icon">
+                        <i class="fas fa-building"></i>
                     </div>
                 </div>
-                <div class="mt-4">
-                    <p class="text-gray-400 text-xs">Dostępne środki</p>
-                    <p class="text-xl font-bold" id="display-vat-balance">2 100,50 PLN</p>
+                <div class="account-balance-label">Dostępne środki</div>
+                <div class="account-balance" id="businessBalance">63 287,28 PLN</div>
+            </div>
+            <div class="account-card">
+                <div class="account-header">
+                    <div class="account-info">
+                        <h3>Rachunek VAT</h3>
+                        <div class="account-number">*4005</div>
+                    </div>
+                    <div class="account-icon">
+                        <i class="fas fa-file-invoice"></i>
+                    </div>
                 </div>
+                <div class="account-balance-label">Dostępne środki</div>
+                <div class="account-balance" id="vatBalance">34 276,23 PLN</div>
             </div>
         </div>
 
         <!-- Cards Section -->
-        <div class="mb-6">
-            <div class="flex justify-between items-center mb-3">
-                <h2 class="font-bold text-lg border-l-4 border-blue-800 pl-2">Karty (1)</h2>
+        <div class="cards-section">
+            <div class="section-header">
+                <div class="section-title">Karty (1)</div>
             </div>
-            <div class="card p-4 flex justify-between items-center">
-                <div>
-                    <h3 class="font-bold text-sm">VISA BUSINESS DEBIT</h3>
-                </div>
-                <div class="w-12 h-8 bg-purple-800 rounded-md"></div>
+            <div class="card-item">
+                <div class="card-name">VISA BUSINESS DEBIT</div>
+                <svg width="80" height="50" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" style="border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                    <!-- Card Background -->
+                    <defs>
+                        <linearGradient id="cardGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#1a1a4d;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#2d3561;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <rect width="320" height="200" fill="url(#cardGradient)" rx="12"/>
+                    
+                    <!-- Chip -->
+                    <rect x="20" y="30" width="40" height="40" fill="#d4af37" rx="4" opacity="0.8"/>
+                    <rect x="25" y="35" width="30" height="30" fill="#c9a227" rx="2"/>
+                    <circle cx="40" cy="50" r="2" fill="#d4af37"/>
+                    
+                    <!-- VISA Text -->
+                    <text x="160" y="80" font-size="24" font-weight="bold" fill="white" font-family="Arial, sans-serif">VISA</text>
+                    <text x="160" y="105" font-size="12" fill="#999" font-family="Arial, sans-serif">BUSINESS</text>
+                    <text x="160" y="125" font-size="12" fill="#999" font-family="Arial, sans-serif">DEBIT</text>
+                    
+                    <!-- Card Number -->
+                    <text x="20" y="160" font-size="14" fill="white" font-family="monospace" letter-spacing="4">4000 1234 5678 9010</text>
+                    
+                    <!-- Cardholder Name -->
+                    <text x="20" y="185" font-size="11" fill="white" font-family="Arial, sans-serif">F. JURGA</text>
+                    <text x="240" y="185" font-size="11" fill="white" font-family="Arial, sans-serif">12/25</text>
+                </svg>
             </div>
         </div>
-    </main>
+    </div>
 
     <!-- Bottom Navigation -->
-    <nav class="bottom-nav">
+    <div class="bottom-nav">
         <div class="nav-item active">
-            <i class="fa-solid fa-house"></i>
-            <span>Pulpit</span>
+            <i class="fas fa-home"></i>
+            <div class="nav-label">Pulpit</div>
         </div>
         <div class="nav-item">
-            <i class="fa-solid fa-basket-shopping"></i>
-            <span>Oferta</span>
+            <i class="fas fa-shopping-bag"></i>
+            <div class="nav-label">Oferta</div>
         </div>
         <div class="nav-item">
-            <i class="fa-solid fa-right-left"></i>
-            <span>Płatności</span>
+            <i class="fas fa-exchange-alt"></i>
+            <div class="nav-label">Płatności</div>
         </div>
         <div class="nav-item">
-            <i class="fa-solid fa-clock-rotate-left"></i>
-            <span>Historia</span>
+            <i class="fas fa-history"></i>
+            <div class="nav-label">Historia</div>
         </div>
         <div class="nav-item">
-            <i class="fa-solid fa-ellipsis"></i>
-            <span>Więcej</span>
+            <i class="fas fa-ellipsis-h"></i>
+            <div class="nav-label">Więcej</div>
         </div>
-    </nav>
+    </div>
 
     <!-- Edit Modal -->
-    <div id="editModal" class="modal">
+    <div class="modal" id="editModal">
         <div class="modal-content">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-bold">Edytuj dane</h2>
-                <button onclick="closeEditModal()" class="text-gray-500"><i class="fa-solid fa-xmark text-xl"></i></button>
-            </div>
-            
-            <div class="input-group">
-                <label>Imię i Nazwisko</label>
-                <input type="text" id="input-name" value="Łukasz Gołębiowski">
-            </div>
-            
-            <div class="input-group">
-                <label>Nazwa konta firmowego</label>
-                <input type="text" id="input-biz-name" value="Konto Firmowe - promocja godna polecenia">
-            </div>
-            
-            <div class="input-group">
-                <label>Kwota na koncie firmowym (PLN)</label>
-                <input type="text" id="input-biz-balance" value="12 450,00">
+            <div class="modal-header">
+                <div class="modal-title">Edytuj dane</div>
+                <button class="modal-close" onclick="closeEditModal()">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
 
-            <div class="input-group">
-                <label>Kwota na koncie VAT (PLN)</label>
-                <input type="text" id="input-vat-balance" value="2 100,50">
+            <div class="form-group">
+                <label class="form-label">Imię i Nazwisko</label>
+                <input type="text" class="form-input" id="inputName" value="Franciszek Jurga">
             </div>
-            
-            <button class="btn-save" onclick="saveData()">Zapisz zmiany</button>
+
+            <div class="form-group">
+                <label class="form-label">Konto osobiste - nazwa</label>
+                <input type="text" class="form-input" id="inputPersonalName" value="Konto osobiste">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Konto osobiste - kwota (PLN)</label>
+                <input type="text" class="form-input" id="inputPersonalBalance" value="8 750,50">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Konto Firmowe - nazwa</label>
+                <input type="text" class="form-input" id="inputBusinessName" value="Konto Firmowe - promocja godna polecenia">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Konto Firmowe - kwota (PLN)</label>
+                <input type="text" class="form-input" id="inputBusinessBalance" value="63 287,28">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Rachunek VAT - kwota (PLN)</label>
+                <input type="text" class="form-input" id="inputVatBalance" value="34 276,23">
+            </div>
+
+            <button class="save-button" onclick="saveData()">Zapisz zmiany</button>
         </div>
     </div>
 
     <script>
+        let isDataHidden = false;
+        const originalBalances = {
+            personal: "8 750,50 PLN",
+            business: "63 287,28 PLN",
+            vat: "34 276,23 PLN"
+        };
+
         function openEditModal() {
-            document.getElementById('editModal').style.display = 'flex';
+            document.getElementById('editModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
 
         function closeEditModal() {
-            document.getElementById('editModal').style.display = 'none';
+            document.getElementById('editModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
         }
 
         function saveData() {
-            const name = document.getElementById('input-name').value;
-            const bizName = document.getElementById('input-biz-name').value;
-            const bizBalance = document.getElementById('input-biz-balance').value;
-            const vatBalance = document.getElementById('input-vat-balance').value;
+            const name = document.getElementById('inputName').value;
+            const personalName = document.getElementById('inputPersonalName').value;
+            const personalBalance = document.getElementById('inputPersonalBalance').value;
+            const businessName = document.getElementById('inputBusinessName').value;
+            const businessBalance = document.getElementById('inputBusinessBalance').value;
+            const vatBalance = document.getElementById('inputVatBalance').value;
 
-            document.getElementById('display-name').innerText = `Cześć, ${name} L...!`;
-            document.getElementById('display-biz-name').innerText = bizName;
-            document.getElementById('display-biz-balance').innerText = `${bizBalance} PLN`;
-            document.getElementById('display-vat-balance').innerText = `${vatBalance} PLN`;
+            document.getElementById('userName').textContent = name;
+            document.getElementById('personalAccName').textContent = personalName;
+            document.getElementById('personalBalance').textContent = personalBalance + ' PLN';
+            document.getElementById('businessAccName').textContent = businessName;
+            document.getElementById('businessBalance').textContent = businessBalance + ' PLN';
+            document.getElementById('vatBalance').textContent = vatBalance + ' PLN';
+
+            originalBalances.personal = personalBalance + ' PLN';
+            originalBalances.business = businessBalance + ' PLN';
+            originalBalances.vat = vatBalance + ' PLN';
 
             closeEditModal();
+        }
+
+        function toggleHideData() {
+            isDataHidden = !isDataHidden;
+            const hideBtn = document.getElementById('hideBtn');
+            const balances = document.querySelectorAll('.account-balance');
+
+            if (isDataHidden) {
+                hideBtn.innerHTML = '<i class="fas fa-eye-slash"></i><span id="hideBtnText">Pokaż</span>';
+                balances.forEach(balance => {
+                    balance.classList.add('hidden');
+                    balance.textContent = '••••••';
+                });
+            } else {
+                hideBtn.innerHTML = '<i class="fas fa-eye"></i><span id="hideBtnText">Ukryj</span>';
+                balances.forEach((balance, index) => {
+                    balance.classList.remove('hidden');
+                    if (index === 0) {
+                        balance.textContent = originalBalances.personal;
+                    } else if (index === 1) {
+                        balance.textContent = originalBalances.business;
+                    } else if (index === 2) {
+                        balance.textContent = originalBalances.vat;
+                    }
+                });
+            }
         }
 
         // Close modal when clicking outside
@@ -330,6 +892,14 @@
                 closeEditModal();
             }
         }
+
+        // Navigation items
+        document.querySelectorAll('.nav-item').forEach((item, index) => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
     </script>
 </body>
 </html>
